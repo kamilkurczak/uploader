@@ -10,9 +10,9 @@ class FileTypeGuesser implements Guesser
         $mimeType = $fileInfo->buffer(file_get_contents($file));
 
         if(strstr($mimeType, 'image/')) {
-            return 'image';
+            return FileType::IMAGE;
         } else {
-            return 'file';
+            return FileType::FILE;
         }
     }
 }
