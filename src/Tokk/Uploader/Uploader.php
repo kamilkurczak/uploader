@@ -4,6 +4,7 @@ namespace Tokk\Uploader;
 
 use Tokk\Uploader\Guesser\FileTypeGuesser;
 use Tokk\Uploader\Guesser\Guesser;
+use Tokk\Uploader\File\File;
 
 class Uploader
 {
@@ -19,15 +20,19 @@ class Uploader
         $guesser ? $this->guesser = $guesser : $this->guesser = new FileTypeGuesser();
     }
     
-    public function upload($file, $uploadDir = '', $fileType = null)
+    public function upload($file, $uploadDir = '', $name = null, $fileType = null)
     {
         if ($uploadDir) {
             $this->setUploadDir($uploadDir);
         }
         
         if (!$fileType) {
-            echo $fileType = $this->guesser->guess($file);
+            $fileType = $this->guesser->guess($file);
         }
+        
+        $fileName = $name ? $name : uniqid();
+        $uploadedFile = new File($file);
+        $uploadedFile->save($fileName, $this->getFullUploadDir());
     }
     
     protected function setUploadDir($uploadDir)
@@ -61,5 +66,10 @@ class Uploader
     public function setGuesser(Guesser $guesser) 
     {
         $this->guesser = $guesser;
+    }
+    
+    protected function getFullUploadDir()
+    {
+        return $this->uploadRootDir . '/' . $this->uploadDir;
     }
 }
