@@ -1,0 +1,26 @@
+{
+	"name" : "tokk/uploader",
+	"description" : "File uploader",
+	"type" : "symfony-bundle",
+	"authors" : [{
+			"name" : "Tokk"
+		}
+	],
+	"keywords" : [
+		"uploader",
+		"symfony2",
+		"bundle",
+		"tokk",
+		"files"
+	],
+	"homepage" : "http://github.com/kamilkurczak/uploader",
+	"license" : [
+		"MIT"
+	],
+	"autoload" : {
+		"psr-0" : {
+			"Tokk\\Uploader" : ""
+		}
+	},
+	"target-dir" : "Tokk/Uploader"
+}
