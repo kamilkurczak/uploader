@@ -2,6 +2,15 @@
 
 $loader = require_once __DIR__.'/vendor/autoload.php';
 
-print_r($loader);
+use Tokk\Uploader\Uploader;
 
-$uploader = new Tokk\Uploader\Uploader();
+//set up uploader
+$uploadRootDir = '/home/kamil/uploader/';
+$uploader = new Uploader($uploadRootDir);
+
+//base file upload to custom directory
+$fileJPG = '/home/kamil/tymek.jpg';
+$filePNG = '/home/kamil/test.png';
+$fileODS = '/home/kamil/godziny_pracy.ods';
+
+$uploader->upload($fileODS, 'test');

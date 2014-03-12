@@ -2,12 +2,7 @@
 
 namespace Tokk\Uploader\Guesser;
 
-class Guesser
+interface Guesser
 {
-    public function guess($file)
-    {
-        $fileType = 'image';
-        
-        return $fileType;
-    }
+    public function guess($file);
 }
