@@ -19,8 +19,7 @@
 	],
 	"autoload" : {
 		"psr-0" : {
-			"Tokk\\Uploader" : ""
+			"Tokk\\Uploader" : "src/"
 		}
-	},
-	"target-dir" : "Tokk/Uploader"
+	}
 }

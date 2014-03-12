@@ -1,6 +1,6 @@
 <?php 
 
-namespace Tokk\Uploader\Uploader;
+namespace Tokk\Uploader;
 
 use Tokk\Uploader\Guesser\Guesser;
 
