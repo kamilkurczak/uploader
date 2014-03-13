@@ -2,7 +2,9 @@
 
 namespace Tokk\Uploader\Validator;
 
-abstract class AbstractValidator implements Valiator
+use Tokk\Uploader\File\File;
+
+abstract class AbstractValidator implements Validator
 {
     protected $errors;
     
@@ -11,7 +13,7 @@ abstract class AbstractValidator implements Valiator
         $this->errors = array();
     }
     
-    public function isValid() {}
+    public function isValid(File $file) {}
     
     public function getErrors()
     {

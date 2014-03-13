@@ -22,6 +22,8 @@ class File
     
     protected $file;
     
+    protected $size = 0;
+    
     public function __construct($file)
     {
         $this->file = $file;
@@ -32,6 +34,7 @@ class File
     {
         $pathInfo = pathinfo($this->file);
         $this->extension = $pathInfo['extension'];
+        $this->size = filesize($this->file);
     }
 
     public function save($fileName, $uploadDir, $permissions = null)
@@ -42,5 +45,10 @@ class File
         if( $permissions != null) {
             \chmod("{$this->uploadDir}/{$fileName}.{$this->extension}", $permissions);
         }
+    }
+    
+    public function getSize()
+    {
+        return $this->size;
     }
 }
