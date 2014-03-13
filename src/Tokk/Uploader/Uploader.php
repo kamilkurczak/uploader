@@ -5,6 +5,7 @@ namespace Tokk\Uploader;
 use Tokk\Uploader\Guesser\FileTypeGuesser;
 use Tokk\Uploader\Guesser\Guesser;
 use Tokk\Uploader\File\File;
+use Tokk\Uploader\File\Image;
 use Tokk\Uploader\Validator\Validator;
 
 class Uploader
@@ -36,7 +37,7 @@ class Uploader
         }
         
         //must be done by factory
-        $uploadedFile = new File($file);
+        $uploadedFile = new Image($file);
         
         //validate
         foreach ($this->validators as $validator) {

@@ -27,14 +27,9 @@ class File
     public function __construct($file)
     {
         $this->file = $file;
-        $this->setFileInfo();
-    }
-    
-    protected function setFileInfo()
-    {
-        $pathInfo = pathinfo($this->file);
+        $pathInfo = \pathinfo($this->file);
         $this->extension = $pathInfo['extension'];
-        $this->size = filesize($this->file);
+        $this->size = \filesize($this->file);
     }
 
     public function save($fileName, $uploadDir, $permissions = null)
