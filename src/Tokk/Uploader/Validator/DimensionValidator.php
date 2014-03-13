@@ -41,48 +41,28 @@ class DimensionValidator extends AbstractValidator
     
     public function isValid(File $file)
     {
-        return $this->validateMinWidth($file) && $this->validateMaxWidth($file)
-            && $this->validateMinHeigth($file) && $this->validateMaxHeigth($file)
+        return $this->validateMin($file, 'Width') && $this->validateMax($file, 'Width')
+            && $this->validateMin($file, 'Heigth') && $this->validateMax($file, 'Heigth')
         ;
     }
     
-    protected function validateMinWidth(File $file)
+    protected function validateMin(File $file, $type)
     {
-        if ($this->minWidth && $file->getWidth() < $this->minWidth) {
-            $this->errors[] = $this->minWidthMessage;
+        if ($this->{"min{$type}"} && $file->{"get{$type}"}() < $this->{"min{$type}"}) {
+            $this->errors[] = $this->{"min{$type}Message"};
             return false;
         }
         
         return true;
     }
     
-    protected function validateMaxWidth(File $file)
+    protected function validateMax(File $file, $type)
     {
-        if($this->maxWidth && $file->getWidth() > $this->maxWidth) {
-            $this->errors[] = $this->maxWidthMessage;
+        if($this->{"max{$type}"} && $file->{"get{$type}"}() > $this->{"max{$type}"}) {
+            $this->errors[] = $this->{"max{$type}Message"};
             return false;
         }
         
-        return true;
-    }
-    
-    protected function validateMinHeigth(File $file)
-    {
-        if ($this->minHeigth && $file->getHeigth() < $this->minHeigth) {
-            $this->errors[] = $this->minHeigthMessage;
-            return false;
-        }
-    
-        return true;
-    }
-    
-    protected function validateMaxHeigth(File $file)
-    {
-        if($this->maxHeigth && $file->getHeigth() > $this->maxHeigth) {
-            $this->errors[] = $this->maxHeigthMessage;
-            return false;
-        }
-    
         return true;
     }
 }
