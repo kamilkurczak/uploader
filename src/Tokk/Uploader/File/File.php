@@ -2,7 +2,7 @@
 
 namespace Tokk\Uploader\File;
 
-class File
+class File implements UploadedFile
 {
     /**
      * Type

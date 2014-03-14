@@ -9,6 +9,8 @@ use Tokk\Uploader\File\Image;
 use Tokk\Uploader\Validator\Validator;
 use Tokk\Uploader\File\FileFactory;
 use Tokk\Uploader\File\FileType;
+use Tokk\Uploader\Callback\Callback;
+use Tokk\Uploader\Callback\CallbackEvent;
 
 class Uploader
 {
@@ -22,6 +24,8 @@ class Uploader
 
     protected $validators = array();
 
+    protected $callbacks = array();
+
     protected $errors = array();
 
     protected $fileClassess = array();
@@ -31,6 +35,12 @@ class Uploader
         $this->setUploadRootDir($uploadRootDir);
         $this->guesser = $guesser ? $guesser : new FileTypeGuesser();
         $this->fileClassess = $fileClassess;
+
+        $this->callbacks = array(
+            CallbackEvent::postBind => array(),
+            CallbackEvent::preSave => array(),
+            CallbackEvent::postSave => array()
+        );
     }
 
     public function upload($file, $uploadDir = '', $name = null, FileType $fileType = null)
@@ -46,13 +56,17 @@ class Uploader
         $uploadedFile = FileFactory::make($fileType, $file, $this->fileClassess);
 
         $this->validate($uploadedFile);
+        $this->callback(CallbackEvent::postBind, $uploadedFile);
 
         if (count($this->errors)) {
             return false;
         }
 
         $fileName = $name ? $name : uniqid();
+
+        $this->callback(CallbackEvent::preSave, $uploadedFile);
         $uploadedFile->save($fileName, $this->getFullUploadDir());
+        $this->callback(CallbackEvent::postSave, $uploadedFile);
         return true;
     }
 
@@ -62,6 +76,13 @@ class Uploader
             if (!$validator->isValid($file)) {
                 $this->errors[] = $validator->getErrors();
             }
+        }
+    }
+
+    protected function callback($event, $file)
+    {
+        foreach ($this->callbacks[$event] as $callback) {
+            $callback->call($file);
         }
     }
 
@@ -111,6 +132,11 @@ class Uploader
     public function setValidators($validators)
     {
         $this->validators = $validators;
+    }
+
+    public function addCallback(Callback $callback)
+    {
+        $this->callbacks[$callback->getEvent()][] = $callback;
     }
 
     public function getErrors()
