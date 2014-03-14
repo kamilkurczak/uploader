@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-namespace Tokk\Uploader\Guesser;
+namespace Tokk\Uploader\File;
 
 class FileType
 {
