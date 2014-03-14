@@ -36,6 +36,11 @@ class Uploader
         $this->guesser = $guesser ? $guesser : new FileTypeGuesser();
         $this->fileClassess = $fileClassess;
 
+        $this->validators = array(
+            FileType::FILE => array(),
+            FileType::IMAGE => array()
+        );
+
         $this->callbacks = array(
             CallbackEvent::postBind => array(),
             CallbackEvent::preSave => array(),
@@ -55,12 +60,16 @@ class Uploader
 
         $uploadedFile = FileFactory::make($fileType, $file, $this->fileClassess);
 
-        $this->validate($uploadedFile);
-        $this->callback(CallbackEvent::postBind, $uploadedFile);
+        $this->validate($fileType, $uploadedFile);
+        if ($fileType != FileType::FILE) {
+            $this->validate(FileType::FILE, $uploadedFile);
+        }
 
         if (count($this->errors)) {
             return false;
         }
+
+        $this->callback(CallbackEvent::postBind, $uploadedFile);
 
         $fileName = $name ? $name : uniqid();
 
@@ -70,9 +79,9 @@ class Uploader
         return true;
     }
 
-    protected function validate(File $file)
+    protected function validate($type, File $file)
     {
-        foreach ($this->validators as $validator) {
+        foreach ($this->validators[$type] as $validator) {
             if (!$validator->isValid($file)) {
                 $this->errors[] = $validator->getErrors();
             }
@@ -126,12 +135,14 @@ class Uploader
 
     public function addValidator(Validator $validator)
     {
-        $this->validators[] = $validator;
+        $this->validators[$validator->getType()][] = $validator;
     }
 
     public function setValidators($validators)
     {
-        $this->validators = $validators;
+        foreach ($validators as $validator) {
+            $this->addValidator($validator);
+        }
     }
 
     public function addCallback(Callback $callback)

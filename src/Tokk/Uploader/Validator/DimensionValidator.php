@@ -3,6 +3,7 @@
 namespace Tokk\Uploader\Validator;
 
 use Tokk\Uploader\File\File;
+use Tokk\Uploader\File\FileType;
 
 class DimensionValidator extends AbstractValidator
 {
@@ -29,6 +30,7 @@ class DimensionValidator extends AbstractValidator
         $this->maxWidth = $maxWidth;
         $this->minHeight = $minHeight;
         $this->maxHeight = $maxHeight;
+        $this->type      = FileType::IMAGE;
 
         /*if ($minMessage) {
             $this->minMessage = $minMessage;
