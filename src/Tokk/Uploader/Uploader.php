@@ -24,10 +24,13 @@ class Uploader
 
     protected $errors = array();
 
-    public function __construct($uploadRootDir, Guesser $guesser = null)
+    protected $fileClassess = array();
+
+    public function __construct($uploadRootDir, Guesser $guesser = null, $fileClassess = array())
     {
         $this->setUploadRootDir($uploadRootDir);
         $this->guesser = $guesser ? $guesser : new FileTypeGuesser();
+        $this->fileClassess = $fileClassess;
     }
 
     public function upload($file, $uploadDir = '', $name = null, FileType $fileType = null)
@@ -41,7 +44,7 @@ class Uploader
         }
 
         //must be done by factory
-        $uploadedFile = FileFactory::make($fileType, $file);
+        $uploadedFile = FileFactory::make($fileType, $file, $this->fileClassess);
 
         //validate
         foreach ($this->validators as $validator) {
