@@ -43,15 +43,9 @@ class Uploader
             $fileType = $this->guesser->guess($file);
         }
 
-        //must be done by factory
         $uploadedFile = FileFactory::make($fileType, $file, $this->fileClassess);
 
-        //validate
-        foreach ($this->validators as $validator) {
-            if (!$validator->isValid($uploadedFile)) {
-                $this->errors[] = $validator->getErrors();
-            }
-        }
+        $this->validate($uploadedFile);
 
         if (count($this->errors)) {
             return false;
@@ -60,6 +54,15 @@ class Uploader
         $fileName = $name ? $name : uniqid();
         $uploadedFile->save($fileName, $this->getFullUploadDir());
         return true;
+    }
+
+    protected function validate(File $file)
+    {
+        foreach ($this->validators as $validator) {
+            if (!$validator->isValid($file)) {
+                $this->errors[] = $validator->getErrors();
+            }
+        }
     }
 
     protected function setUploadDir($uploadDir)
