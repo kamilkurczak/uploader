@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace Tokk\Uploader\File;
 
-class File
+class File implements UploadedFile
 {
     /**
      * Type
@@ -10,22 +10,26 @@ class File
      * @var string
      */
     protected $type;
-    
+
     /**
      * Extension
      *
      * @var string
      */
     protected $extension;
-    
+
     protected $uploadDir;
-    
+
     protected $file;
-    
+
     protected $size = 0;
-    
+
     public function __construct($file)
     {
+        if (!$file) {
+            throw new \InvalidArgumentException('Wrong file');
+        }
+
         $this->file = $file;
         $pathInfo = \pathinfo($this->file);
         $this->extension = $pathInfo['extension'];
@@ -36,12 +40,12 @@ class File
     {
         $this->uploadDir = $uploadDir;
         \copy($this->file, "{$this->uploadDir}/{$fileName}.{$this->extension}");
-    
+
         if( $permissions != null) {
             \chmod("{$this->uploadDir}/{$fileName}.{$this->extension}", $permissions);
         }
     }
-    
+
     public function getSize()
     {
         return $this->size;

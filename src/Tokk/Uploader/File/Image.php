@@ -1,27 +1,42 @@
-<?php 
+<?php
 
 namespace Tokk\Uploader\File;
 
 class Image extends File
 {
-    protected $width;
-    
-    protected $heigth;
-    
     public function __construct($file)
     {
         parent::__construct($file);
-        $this->width = \getimagesize($file)[0];
-        $this->heigth = \getimagesize($file)[1];
+        $this->file = \imagecreatefromjpeg($file);
     }
-    
+
     public function getWidth()
     {
-        return $this->width;
+        return \imagesx($this->file);
     }
-    
-    public function getHeigth()
+
+    public function getHeight()
     {
-        return $this->heigth;
+        return \imagesy($this->file);
+    }
+
+    public function save($fileName, $uploadDir, $permissions = null)
+    {
+        $this->uploadDir = $uploadDir;
+        \imagejpeg($this->file, "{$this->uploadDir}/{$fileName}.{$this->extension}");
+
+        if( $permissions != null) {
+            \chmod("{$this->uploadDir}/{$fileName}.{$this->extension}", $permissions);
+        }
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile($file)
+    {
+        $this->file = $file;
     }
 }
